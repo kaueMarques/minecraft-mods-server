@@ -1,4 +1,4 @@
-name: Deploy to FTP
+name: Deploy to SFTP
 
 on:
   push:
@@ -6,17 +6,19 @@ on:
       - master
 
 jobs:
-  ftp-deploy:
-    name: FTP Deploy
+  sftp-deploy:
+    name: SFTP Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Sync files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      - name: Upload files via SFTP
+        uses: appleboy/scp-action@v0.1.0
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          port: ${{ secrets.FTP_PORT }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          host: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ secrets.SFTP_PORT }}
+          source: "."
+          target: "/mods"
