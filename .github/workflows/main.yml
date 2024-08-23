@@ -1,4 +1,4 @@
-name: Deploy to SFTP
+name: Deploy to FTP
 
 on:
   push:
@@ -6,19 +6,17 @@ on:
       - master
 
 jobs:
-  sftp-deploy:
-    name: SFTP Deploy
+  ftp-deploy:
+    name: FTP Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Upload files via SFTP
-        uses: appleboy/scp-action@v0.1.0
+      - name: Sync files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          host: ${{ secrets.SFTP_SERVER }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ secrets.SFTP_PORT }}
-          source: "caminho/para/seus/arquivos"
-          target: "caminho/no/servidor"
+          server: ${{ secrets.FTP_SERVER }}
+          port: ${{ secrets.FTP_PORT }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
