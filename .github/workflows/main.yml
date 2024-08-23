@@ -1,4 +1,4 @@
-name: Deploy to SFTP
+name: Deploy to FTP
 
 on:
   push:
@@ -6,19 +6,20 @@ on:
       - master
 
 jobs:
-  sftp-deploy:
-    name: SFTP Deploy
+  ftp-deploy:
+    name: FTP Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy via SSH
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-          SSH_PORT: ${{ secrets.SSH_PORT }}
-          SOURCE: "."
-          TARGET: "/mods"
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      - name: Upload files via FTP
+        run: |
+          lftp -f "
+          open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }}
+          mirror -R . /mods
+          bye
+          "
