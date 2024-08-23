@@ -10,15 +10,16 @@ jobs:
     name: FTP Deploy
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install lftp
-        run: sudo apt-get install -y lftp
+      - name: Install sftp
+        run: sudo apt-get install -y sftp
 
       - name: Upload files via FTP
         run: |
-          lftp -f "
+          sftp -f "
           open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }}
           mirror -R . /mods
           bye
